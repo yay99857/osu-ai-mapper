@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://osu-ai-mapper.local/schemas/song-analysis-poc-0.3.schema.json",
+  "title": "SongAnalysis (proof of concept 0.2)",
+  "description": "Written by engines/audio-analysis, read by engines/generation. Observations and one constant timing hypothesis with features sampled on its 1/4 grid. No mapping decisions: density and object choices belong to the mapping plan. Grid index 0 is the first downbeat (timing.offsetUs).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "audio", "observations", "timing", "gridDivisor", "grid", "sections", "provenance"],
+  "properties": {
+    "schemaVersion": { "const": "poc-0.3" },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sha256", "durationUs", "sampleRate"],
+      "description": "The analysed file, which is also the file that gets packaged.",
+      "properties": {
+        "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "durationUs": { "type": "integer", "minimum": 0 },
+        "sampleRate": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "observations": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trackerBeatsUs"],
+      "properties": {
+        "trackerBeatsUs": { "type": "array", "items": { "type": "integer" }, "description": "Raw beat tracker output, kept as evidence; not the selected grid." }
+      }
+    },
+    "timing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["bpm", "beatLengthUs", "offsetUs", "source", "manualFields", "trackerBpm", "inlierRatio", "gridScore", "chanceScore", "alternatives", "confidence", "confidenceKind"],
+      "properties": {
+        "bpm": { "type": "number", "exclusiveMinimum": 0 },
+        "beatLengthUs": { "type": "number", "exclusiveMinimum": 0 },
+        "offsetUs": { "type": "integer", "description": "First downbeat. May be negative when set manually." },
+        "source": { "enum": ["detected", "manual"] },
+        "manualFields": { "type": "array", "items": { "enum": ["bpm", "offset"] }, "uniqueItems": true },
+        "trackerBpm": { "type": "number", "minimum": 0 },
+        "inlierRatio": { "type": "number", "minimum": 0, "maximum": 1 },
+        "gridScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "chanceScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["bpm", "gridScore"],
+            "properties": { "bpm": { "type": "number" }, "gridScore": { "type": "number" } }
+          }
+        },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "confidenceKind": { "const": "heuristic", "description": "Not a calibrated probability." }
+      }
+    },
+    "gridDivisor": { "const": 4 },
+    "grid": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["index", "timeUs", "onset", "low", "high", "energy", "sustain", "percussive", "harmonic", "tone", "toneHeld"],
+        "properties": {
+          "index": { "type": "integer" },
+          "timeUs": { "type": "integer" },
+          "onset": { "type": "number", "minimum": 0 },
+          "low": { "type": "number", "minimum": 0 },
+          "high": { "type": "number", "minimum": 0 },
+          "energy": { "type": "number", "minimum": 0 },
+          "sustain": { "type": "number", "minimum": 0 },
+          "percussive": { "type": "number", "minimum": 0, "description": "Onset strength of the percussive part (HPSS). Mostly drums; not a stem." },
+          "harmonic": { "type": "number", "minimum": 0, "description": "Onset strength of the harmonic part between 200 Hz and 4 kHz (HPSS)." },
+          "tone": { "type": "number", "minimum": 0, "description": "Loudness of the harmonic part in that band." },
+          "toneHeld": { "type": "number", "minimum": 0, "description": "Harmonic loudness held through the next beat without new harmonic attacks." }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["startUs", "endUs", "firstBar", "barCount", "intensity", "energy"],
+        "properties": {
+          "startUs": { "type": "integer" },
+          "endUs": { "type": "integer" },
+          "firstBar": { "type": "integer" },
+          "barCount": { "type": "integer", "minimum": 1 },
+          "intensity": { "type": "integer", "minimum": 0, "maximum": 3, "description": "Loudness level, not a semantic label like chorus." },
+          "energy": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["librosa", "hop", "sampleRate"],
+      "properties": {
+        "librosa": { "type": "string" },
+        "hop": { "type": "integer" },
+        "sampleRate": { "type": "integer" }
+      }
+    }
+  }
+}

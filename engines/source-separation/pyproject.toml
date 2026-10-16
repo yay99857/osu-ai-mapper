@@ -1,0 +1,36 @@
+[project]
+name = "osu-ai-separation"
+version = "0.1.0"
+description = "Optional source separation for osu-ai-mapper: the vocal stem's onsets on the analysis grid (Demucs)."
+# PyTorch wheels lag behind new Pythons; this stays a separate environment from the analyzer.
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "demucs>=4.0.1",
+    "torch==2.7.*",
+    "torchaudio==2.7.*",
+    "soundfile>=0.13",
+    "numpy>=1.26",
+    "librosa>=0.11",
+]
+
+[project.scripts]
+osu-ai-separate = "osu_ai_separation.cli:main"
+
+[tool.uv.sources]
+torch = { index = "pytorch-cpu" }
+torchaudio = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

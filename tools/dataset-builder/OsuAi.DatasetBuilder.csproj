@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Title matching needs Unicode normalisation (NFKD), which invariant globalization does not do. -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>osu-ai-dataset</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="OsuAi.DatasetBuilder.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\osu-adapter\OsuAi.OsuAdapter.csproj" />
+  </ItemGroup>
+</Project>

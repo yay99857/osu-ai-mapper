@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Lets the Linux CI job build and run the headless UI tests. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Avalonia.Headless.NUnit" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\apps\desktop\OsuAi.Desktop.csproj" />
+  </ItemGroup>
+</Project>

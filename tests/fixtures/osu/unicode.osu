@@ -1,0 +1,54 @@
+osu file format v14
+
+[General]
+AudioFilename: audio.wav
+AudioLeadIn: 0
+PreviewTime: -1
+Countdown: 0
+SampleSet: Normal
+StackLeniency: 0.7
+Mode: 0
+LetterboxInBreaks: 0
+WidescreenStoryboard: 0
+
+[Editor]
+DistanceSpacing: 1
+BeatDivisor: 4
+GridSize: 32
+TimelineZoom: 1
+
+[Metadata]
+Title:Kaze no Uta
+TitleUnicode:風の歌
+Artist:Shinsei Fixture
+ArtistUnicode:新星フィクスチャ
+Creator:osu-ai-mapper
+Version:Unicode
+Source:
+Tags:unicode テスト fixture
+BeatmapID:0
+BeatmapSetID:-1
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:8
+ApproachRate:9
+SliderMultiplier:1.4
+SliderTickRate:1
+
+[Events]
+//Background and Video events
+//Break Periods
+//Storyboard Layer 0 (Background)
+
+[TimingPoints]
+500,600,4,1,0,70,1,0
+
+[HitObjects]
+150,200,500,5,0,0:0:0:0:
+190,200,1100,1,0,0:0:0:0:
+230,200,1700,1,0,0:0:0:0:
+270,200,2300,1,0,0:0:0:0:
+310,200,2900,1,0,0:0:0:0:
+350,200,3500,1,0,0:0:0:0:

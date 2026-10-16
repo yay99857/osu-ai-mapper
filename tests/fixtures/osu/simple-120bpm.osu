@@ -1,0 +1,69 @@
+osu file format v14
+
+[General]
+AudioFilename: audio.wav
+AudioLeadIn: 0
+PreviewTime: 5000
+Countdown: 0
+SampleSet: Normal
+StackLeniency: 0.7
+Mode: 0
+LetterboxInBreaks: 0
+WidescreenStoryboard: 0
+
+[Editor]
+DistanceSpacing: 1
+BeatDivisor: 4
+GridSize: 32
+TimelineZoom: 1
+
+[Metadata]
+Title:Simple 120 BPM
+Artist:osu-ai-mapper fixtures
+Creator:osu-ai-mapper
+Version:Simple
+Source:
+Tags:fixture synthetic
+BeatmapID:0
+BeatmapSetID:-1
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:8
+ApproachRate:9
+SliderMultiplier:1.4
+SliderTickRate:1
+
+[Events]
+//Background and Video events
+//Break Periods
+2,17500,22500
+//Storyboard Layer 0 (Background)
+
+[TimingPoints]
+1000,500,4,1,0,70,1,0
+
+[HitObjects]
+128,96,1000,5,0,0:0:0:0:
+256,96,1500,1,0,0:0:0:0:
+384,96,2000,1,0,0:0:0:0:
+384,192,2500,1,0,0:0:0:0:
+256,192,3000,1,0,0:0:0:0:
+128,192,3500,1,0,0:0:0:0:
+128,288,4000,1,0,0:0:0:0:
+256,288,4500,1,0,0:0:0:0:
+256,288,5000,6,0,L|384:288,1,128,0|0,0:0|0:0,0:0:0:0:
+384,192,6000,2,0,L|256:192,1,128,0|0,0:0|0:0,0:0:0:0:
+100,100,7000,5,0,0:0:0:0:
+140,120,7500,1,0,0:0:0:0:
+180,140,8000,1,0,0:0:0:0:
+220,160,8500,1,0,0:0:0:0:
+260,180,9000,1,0,0:0:0:0:
+300,200,9500,1,0,0:0:0:0:
+340,220,10000,1,0,0:0:0:0:
+380,240,10500,1,0,0:0:0:0:
+316,192,23000,5,0,0:0:0:0:
+256,252,23500,1,0,0:0:0:0:
+196,192,24000,1,0,0:0:0:0:
+256,132,24500,1,0,0:0:0:0:

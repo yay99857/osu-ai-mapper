@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "1.0",
+  "id": "0b6f6d3e-6a43-8d1c-9a55-1c2f3a4b5c6d",
+  "revisionId": "5e0c1f2a-3b4c-8d5e-8f60-718293a4b5c6",
+  "ruleset": "osu-standard",
+  "metadata": {
+    "title": "Click Track",
+    "artist": "osu-ai-mapper",
+    "creator": "osu-ai-mapper",
+    "difficultyName": "Minimal",
+    "tags": ["example"]
+  },
+  "assets": {
+    "audio": { "id": "audio", "relativePath": "audio.wav", "mimeType": "audio/wav" },
+    "samples": []
+  },
+  "settings": {
+    "ar": 8,
+    "od": 7,
+    "cs": 4,
+    "hp": 5,
+    "sliderMultiplier": 1.4,
+    "sliderTickRate": 1,
+    "stackLeniency": 0.7,
+    "previewTimeUs": 2000000
+  },
+  "timing": {
+    "segments": [
+      {
+        "id": "t0",
+        "startTimeUs": 638000,
+        "startBeat": { "numerator": 0, "denominator": 1 },
+        "beatLengthUs": 329670.32967032967,
+        "meter": { "numerator": 4, "denominator": 4 },
+        "omitFirstBarLine": false,
+        "source": "manual",
+        "confidence": 1
+      }
+    ],
+    "mappingConvention": "quarter-note-beat"
+  },
+  "controls": { "effects": [] },
+  "breaks": [],
+  "objects": [
+    {
+      "kind": "circle",
+      "id": "8f1a2b3c-4d5e-8f60-9172-83a4b5c6d7e8",
+      "timeUs": 638000,
+      "position": { "x": 128, "y": 192 },
+      "newCombo": true,
+      "comboSkip": 0,
+      "samples": [{ "name": "hitnormal", "bank": "soft", "volume": 70, "autoBank": false }],
+      "lockedFields": []
+    },
+    {
+      "kind": "slider",
+      "id": "9a2b3c4d-5e6f-8071-8283-94a5b6c7d8e9",
+      "timeUs": 967670,
+      "position": { "x": 228, "y": 192 },
+      "newCombo": false,
+      "comboSkip": 0,
+      "samples": [{ "name": "hitnormal", "bank": "soft", "volume": 70, "autoBank": false }],
+      "path": {
+        "coordinateSpace": "relative-to-head",
+        "controlPoints": [
+          { "x": 0, "y": 0, "segmentType": "bezier" },
+          { "x": 70, "y": -60 },
+          { "x": 140, "y": 0 }
+        ]
+      },
+      "expectedDistancePx": 140,
+      "spanCount": 1,
+      "svMultiplier": 1,
+      "nodeSamples": [
+        [{ "name": "hitnormal", "bank": "soft", "volume": 70, "autoBank": false }],
+        [
+          { "name": "hitnormal", "bank": "soft", "volume": 70, "autoBank": false },
+          { "name": "hitclap", "bank": "soft", "volume": 70, "autoBank": true }
+        ]
+      ],
+      "generateTicks": true,
+      "lockedFields": []
+    },
+    {
+      "kind": "spinner",
+      "id": "ab3c4d5e-6f70-8182-9394-a5b6c7d8e9fa",
+      "timeUs": 1627011,
+      "position": { "x": 256, "y": 192 },
+      "newCombo": true,
+      "comboSkip": 0,
+      "samples": [],
+      "endTimeUs": 2945692,
+      "lockedFields": []
+    }
+  ],
+  "locks": [],
+  "provenance": { "createdBy": "hand-written example" },
+  "exportProfile": "osu-interchange-v1"
+}

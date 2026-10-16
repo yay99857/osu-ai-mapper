@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Beatmap intermediate representation and its domain invariants. Knows nothing about osu.Game.</Description>
+  </PropertyGroup>
+</Project>

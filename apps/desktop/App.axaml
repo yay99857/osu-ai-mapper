@@ -1,0 +1,154 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="OsuAi.Desktop.App"
+             RequestedThemeVariant="Dark">
+  <!-- A dark studio with osu!'s pink as the accent. Colours live here; views only use the classes. -->
+  <Application.Resources>
+    <Color x:Key="Pink">#FF66AA</Color>
+    <SolidColorBrush x:Key="PinkBrush" Color="#FF66AA" />
+    <SolidColorBrush x:Key="PinkHoverBrush" Color="#FF85BC" />
+    <SolidColorBrush x:Key="PinkPressedBrush" Color="#E04F92" />
+    <SolidColorBrush x:Key="PinkSoftBrush" Color="#2BFF66AA" />
+    <SolidColorBrush x:Key="WindowBrush" Color="#141217" />
+    <SolidColorBrush x:Key="BarBrush" Color="#1B1820" />
+    <SolidColorBrush x:Key="CardBrush" Color="#201C26" />
+    <SolidColorBrush x:Key="CardBorderBrush" Color="#2F2A37" />
+    <SolidColorBrush x:Key="FieldBrush" Color="#17141B" />
+    <SolidColorBrush x:Key="MutedBrush" Color="#A79FB2" />
+    <!-- Fluent's own expander colours, darkened to sit inside a card. -->
+    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="#1A171F" />
+    <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver" Color="#25212B" />
+    <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed" Color="#2B2632" />
+    <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="#2F2A37" />
+    <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPointerOver" Color="#3C3546" />
+    <SolidColorBrush x:Key="ExpanderHeaderBorderBrushPressed" Color="#3C3546" />
+    <SolidColorBrush x:Key="ExpanderContentBackground" Color="#1A171F" />
+    <SolidColorBrush x:Key="ExpanderContentBorderBrush" Color="#2F2A37" />
+  </Application.Resources>
+
+  <Application.Styles>
+    <FluentTheme>
+      <FluentTheme.Palettes>
+        <ColorPaletteResources x:Key="Dark" Accent="#FF66AA" RegionColor="#141217" AltHigh="#141217" BaseHigh="#F3EEF7" ChromeMediumLow="#201C26" ChromeMedium="#26212D" ChromeLow="#1B1820" ListLow="#2A2532" ListMedium="#352F3E" />
+      </FluentTheme.Palettes>
+    </FluentTheme>
+
+    <Style Selector="Window">
+      <Setter Property="Background" Value="{StaticResource WindowBrush}" />
+      <Setter Property="FontFamily" Value="Segoe UI Variable Text, Segoe UI, Inter, sans-serif" />
+    </Style>
+
+    <!-- Cards hold one section each. -->
+    <Style Selector="Border.card">
+      <Setter Property="Background" Value="{StaticResource CardBrush}" />
+      <Setter Property="BorderBrush" Value="{StaticResource CardBorderBrush}" />
+      <Setter Property="BorderThickness" Value="1" />
+      <Setter Property="CornerRadius" Value="12" />
+      <Setter Property="Padding" Value="18,14,18,16" />
+      <Setter Property="Margin" Value="0,0,0,14" />
+    </Style>
+
+    <Style Selector="TextBlock.section">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="FontWeight" Value="Bold" />
+      <Setter Property="LetterSpacing" Value="1.2" />
+      <Setter Property="Foreground" Value="{StaticResource PinkBrush}" />
+      <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+    <Style Selector="TextBlock.title">
+      <Setter Property="FontSize" Value="24" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <Style Selector="TextBlock.label">
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style Selector="TextBlock.hint">
+      <Setter Property="FontSize" Value="12" />
+      <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="TextBlock.error">
+      <Setter Property="Foreground" Value="#FF6B6B" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+    <Style Selector="TextBlock.warning">
+      <Setter Property="Foreground" Value="#FFB454" />
+      <Setter Property="TextWrapping" Value="Wrap" />
+    </Style>
+
+    <Style Selector="Button">
+      <Setter Property="Margin" Value="0,0,8,8" />
+      <Setter Property="Padding" Value="14,7" />
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="Button.bar">
+      <Setter Property="Margin" Value="0,0,6,0" />
+      <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!-- The one thing to press: pink, larger. -->
+    <Style Selector="Button.primary">
+      <Setter Property="Background" Value="{StaticResource PinkBrush}" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+      <Setter Property="Padding" Value="22,10" />
+      <Setter Property="FontSize" Value="15" />
+    </Style>
+    <Style Selector="Button.primary:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource PinkHoverBrush}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.primary:pressed /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource PinkPressedBrush}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="Button.primary:disabled /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#4A3A44" />
+      <Setter Property="Foreground" Value="#A79FB2" />
+    </Style>
+
+    <!-- Translucent buttons that sit on top of the background image. -->
+    <Style Selector="Button.overlay">
+      <Setter Property="Background" Value="#99000000" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="Margin" Value="8,0,0,0" />
+    </Style>
+    <Style Selector="Button.overlay:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="#CC000000" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <!-- Style tags: pills that turn pink when chosen. -->
+    <Style Selector="ToggleButton.chip">
+      <Setter Property="CornerRadius" Value="14" />
+      <Setter Property="Padding" Value="12,5" />
+      <Setter Property="Margin" Value="0,0,6,6" />
+      <Setter Property="FontSize" Value="12" />
+    </Style>
+    <Style Selector="ToggleButton.chip:checked /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource PinkBrush}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+    <Style Selector="ToggleButton.chip:checked:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{StaticResource PinkHoverBrush}" />
+      <Setter Property="Foreground" Value="White" />
+    </Style>
+
+    <Style Selector="TextBox, ComboBox, NumericUpDown">
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="TextBox">
+      <Setter Property="Background" Value="{StaticResource FieldBrush}" />
+    </Style>
+    <Style Selector="Expander">
+      <Setter Property="CornerRadius" Value="8" />
+    </Style>
+    <Style Selector="ProgressBar">
+      <Setter Property="Foreground" Value="{StaticResource PinkBrush}" />
+      <Setter Property="MinHeight" Value="6" />
+      <Setter Property="CornerRadius" Value="3" />
+    </Style>
+  </Application.Styles>
+</Application>

@@ -1,0 +1,36 @@
+osu file format v4
+
+[General]
+AudioFilename: audio.wav
+AudioLeadIn: 0
+PreviewTime: -1
+SampleSet: Normal
+
+[Metadata]
+Title:Legacy Old Version
+Artist:osu-ai-mapper fixtures
+Creator:osu-ai-mapper
+Version:Old
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:6
+SliderMultiplier:1
+SliderTickRate:1
+
+[Events]
+
+[TimingPoints]
+1000,500
+
+[HitObjects]
+100,192,1000,5,0
+140,192,1500,1,0
+180,192,2000,1,0
+220,192,2500,1,0
+260,192,3000,1,0
+300,192,3500,1,0
+340,192,4000,1,0
+380,192,4500,1,0
+420,192,5000,2,0,B|420:300,1,100

@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Application services shared by the CLI and the desktop app: import, analyse, generate, edit metadata, export.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="OsuAi.Application.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\project-store\OsuAi.ProjectStore.csproj" />
+    <ProjectReference Include="..\osu-adapter\OsuAi.OsuAdapter.csproj" />
+    <ProjectReference Include="..\..\engines\generation\OsuAi.Generation.csproj" />
+  </ItemGroup>
+</Project>

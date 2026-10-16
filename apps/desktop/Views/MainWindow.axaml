@@ -1,0 +1,347 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OsuAi.Desktop.ViewModels"
+        xmlns:views="using:OsuAi.Desktop.Views"
+        x:Class="OsuAi.Desktop.Views.MainWindow"
+        x:DataType="vm:MainViewModel"
+        Title="{Binding WindowTitle}"
+        Icon="avares://osu-ai-mapper/Assets/app.ico"
+        Width="1240" Height="860" MinWidth="960" MinHeight="640"
+        DragDrop.AllowDrop="True">
+
+  <DockPanel>
+    <!-- Top bar -->
+    <Border DockPanel.Dock="Top" Padding="18,10" Background="{StaticResource BarBrush}" BorderThickness="0,0,0,1" BorderBrush="{StaticResource CardBorderBrush}">
+      <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" Spacing="10" VerticalAlignment="Center" Margin="0,0,24,0">
+          <Ellipse Width="22" Height="22" Fill="{StaticResource PinkBrush}" />
+          <TextBlock Text="osu! ai mapper" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" VerticalAlignment="Center">
+          <Button Content="Novo projeto…" Click="OnNewProject" Classes="bar" />
+          <Button Content="Abrir projeto…" Click="OnOpenProject" Classes="bar" />
+          <Button Content="Gerenciar modelos…" Click="OnManageModels" Classes="bar" />
+          <Button Content="Fechar projeto" Command="{Binding CloseProjectCommand}" IsVisible="{Binding HasProject}" Classes="bar" />
+        </StackPanel>
+        <TextBlock Text="{Binding ProjectPath}" VerticalAlignment="Center" Classes="hint" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />
+      </DockPanel>
+    </Border>
+
+    <!-- Messages -->
+    <Border DockPanel.Dock="Bottom" Padding="18,8" Background="{StaticResource BarBrush}" BorderThickness="0,1,0,0" BorderBrush="{StaticResource CardBorderBrush}"
+            IsVisible="{Binding ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+      <TextBlock Text="{Binding ErrorText}" Classes="error" />
+    </Border>
+    <Border DockPanel.Dock="Bottom" Padding="18,8" Background="{StaticResource BarBrush}" BorderThickness="0,1,0,0" BorderBrush="{StaticResource CardBorderBrush}"
+            IsVisible="{Binding InfoText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+      <TextBlock Text="{Binding InfoText}" TextWrapping="Wrap" />
+    </Border>
+
+    <Panel>
+      <!-- Start screen: a drop zone -->
+      <Panel IsVisible="{Binding HasNoProject}" Margin="48">
+        <Rectangle Stroke="#55FF66AA" StrokeThickness="2" StrokeDashArray="6,4" RadiusX="16" RadiusY="16" Fill="#0DFF66AA" />
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Spacing="14">
+          <Panel Width="84" Height="84" HorizontalAlignment="Center">
+            <Ellipse Fill="{StaticResource PinkBrush}" />
+            <Ellipse Margin="10" Stroke="White" StrokeThickness="5" />
+          </Panel>
+          <TextBlock Text="Arraste uma música aqui para começar" FontSize="26" FontWeight="SemiBold" HorizontalAlignment="Center" />
+          <TextBlock Text="MP3, OGG, WAV ou FLAC. A música é copiada para o projeto; o arquivo original não é alterado e nada é enviado para a internet."
+                     Classes="hint" FontSize="13" HorizontalAlignment="Center" MaxWidth="540" TextAlignment="Center" />
+          <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+            <Button Content="Escolher música…" Click="OnNewProject" Classes="primary" />
+            <Button Content="Abrir projeto existente…" Click="OnOpenProject" VerticalAlignment="Center" />
+          </StackPanel>
+        </StackPanel>
+      </Panel>
+
+      <!-- Project -->
+      <Grid IsVisible="{Binding HasProject}" RowDefinitions="Auto,*" ColumnDefinitions="5*,4*" Margin="18,16,18,0">
+
+        <!-- Banner: the background image, as osu! shows it at song select, with the song over it -->
+        <Border Grid.ColumnSpan="2" Height="210" CornerRadius="14" ClipToBounds="True" Margin="0,0,0,16"
+                BorderThickness="1" BorderBrush="{StaticResource CardBorderBrush}">
+          <Border.Background>
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+              <GradientStop Offset="0" Color="#3A1F3A" />
+              <GradientStop Offset="0.6" Color="#241B33" />
+              <GradientStop Offset="1" Color="#16131C" />
+            </LinearGradientBrush>
+          </Border.Background>
+          <Panel>
+            <Image Source="{Binding BackgroundImage}" Stretch="UniformToFill" IsVisible="{Binding HasBackground}" />
+            <Border>
+              <Border.Background>
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="0%,100%">
+                  <GradientStop Offset="0" Color="#10000000" />
+                  <GradientStop Offset="1" Color="#D0000000" />
+                </LinearGradientBrush>
+              </Border.Background>
+            </Border>
+
+            <StackPanel IsVisible="{Binding HasNoBackground}" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,34,0,0" Spacing="4">
+              <TextBlock Text="Sem imagem de fundo" FontSize="15" FontWeight="SemiBold" HorizontalAlignment="Center" Foreground="#E6DDEA" />
+              <TextBlock Text="Arraste uma imagem JPG ou PNG para a janela, ou escolha uma. Ela vai junto no .osz." Classes="hint" HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <DockPanel VerticalAlignment="Bottom" Margin="22,0,18,16">
+              <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Button Content="▶ / ❚❚" Command="{Binding PlayPauseCommand}" ToolTip.Tip="Tocar ou pausar a música" Classes="overlay" />
+                <Button Content="■" Command="{Binding StopAudioCommand}" ToolTip.Tip="Parar" Classes="overlay" />
+                <Button Content="Escolher imagem de fundo…" Click="OnChooseBackground" Classes="overlay" />
+                <Button Content="Remover" Command="{Binding RemoveBackgroundCommand}" IsVisible="{Binding HasBackground}" Classes="overlay" />
+              </StackPanel>
+              <StackPanel Spacing="2">
+                <TextBlock Text="{Binding Title}" Classes="title" Foreground="White" />
+                <TextBlock Text="{Binding Artist}" FontSize="15" Foreground="#E6DDEA" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding AudioInfo}" FontSize="12" Foreground="#B8AEC2" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding BackgroundInfo}" FontSize="12" Foreground="#B8AEC2" TextTrimming="CharacterEllipsis" IsVisible="{Binding HasBackground}" />
+              </StackPanel>
+            </DockPanel>
+          </Panel>
+        </Border>
+
+        <!-- Left: what the map is and how to make it -->
+        <ScrollViewer Grid.Row="1" Grid.Column="0" Padding="0,0,16,0">
+          <StackPanel>
+            <Border Classes="card">
+              <StackPanel>
+                <TextBlock Text="GERAÇÃO" Classes="section" />
+                <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="10">
+                  <TextBlock Grid.Row="0" Text="Modelo" Classes="label" VerticalAlignment="Top" Margin="0,6,0,0" />
+                  <StackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
+                    <ComboBox ItemsSource="{Binding ModelNames}" SelectedIndex="{Binding ModelIndex}" HorizontalAlignment="Stretch" />
+                    <TextBlock Text="Mapperatorinator dá o melhor mapa, mas é lento na CPU; use a prévia para conferir antes. Os Pulso são rápidos, bons para testar o timing." Classes="hint" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="1" Text="Estrelas alvo" Classes="label" />
+                  <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" Spacing="10">
+                    <NumericUpDown Value="{Binding TargetStars}" Minimum="1" Maximum="8" Increment="0.1" FormatString="0.0" Width="140" />
+                    <TextBlock Text="aproximado: o resultado costuma ficar a meia estrela do alvo" Classes="hint" VerticalAlignment="Center" />
+                  </StackPanel>
+                  <TextBlock Grid.Row="2" Text="Estilo" Classes="label" IsVisible="{Binding StyleAvailable}" />
+                  <StackPanel Grid.Row="2" Grid.Column="1" Spacing="4" IsVisible="{Binding StyleAvailable}">
+                    <ComboBox ItemsSource="{Binding StyleNames}" SelectedIndex="{Binding StyleIndex}" HorizontalAlignment="Stretch" />
+                    <TextBlock Text="Jumps: poucos streams, como nos mapas populares. Streams: mais sequências de 1/4." Classes="hint" />
+                  </StackPanel>
+                </Grid>
+
+                <!-- Mapperatorinator style: tags and a mapper it learned -->
+                <StackPanel IsVisible="{Binding IsMapperatorinator}" Spacing="8" Margin="0,14,0,0">
+                  <DockPanel>
+                    <TextBlock Text="Estilo do mapa" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding StyleSummary}" Classes="hint" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                  </DockPanel>
+                  <ItemsControl ItemsSource="{Binding StyleTags}">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <WrapPanel />
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                      <DataTemplate x:DataType="vm:StyleTag">
+                        <ToggleButton Content="{Binding Label}" IsChecked="{Binding IsSelected}" ToolTip.Tip="{Binding Tip}" Classes="chip" />
+                      </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                  </ItemsControl>
+                  <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto" RowSpacing="8">
+                    <TextBlock Text="Como o mapper" Classes="label" ToolTip.Tip="Imita o estilo de um mapper que o modelo aprendeu" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8">
+                      <ComboBox ItemsSource="{Binding MapperNames}" SelectedIndex="{Binding MapperIndex}" Width="220" />
+                      <NumericUpDown Value="{Binding CustomMapperId}" IsVisible="{Binding ShowCustomMapper}" Minimum="1" Maximum="99999999" Increment="1" FormatString="0"
+                                     PlaceholderText="ID do perfil no osu!" Width="190" ShowButtonSpinner="False" />
+                    </StackPanel>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding MapperHint}" Classes="hint"
+                               IsVisible="{Binding MapperHint, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                  </Grid>
+                  <CheckBox IsChecked="{Binding StrongStyle}" Content="Seguir o estilo com mais força (leva o dobro do tempo)" />
+                </StackPanel>
+                <Expander Header="Dificuldade e timing (avançado)" Margin="0,12,0,0" HorizontalAlignment="Stretch">
+                  <StackPanel Spacing="6">
+                    <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6">
+                      <TextBlock Grid.Row="0" Text="AR" Classes="label" />
+                      <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding Ar}" Minimum="0" Maximum="10" Increment="0.1" FormatString="0.0" PlaceholderText="automático (9.3)" Width="180" HorizontalAlignment="Left" />
+                      <TextBlock Grid.Row="1" Text="OD" Classes="label" />
+                      <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding Od}" Minimum="0" Maximum="10" Increment="0.1" FormatString="0.0" PlaceholderText="automático (8)" Width="180" HorizontalAlignment="Left" />
+                      <TextBlock Grid.Row="2" Text="CS" Classes="label" />
+                      <NumericUpDown Grid.Row="2" Grid.Column="1" Value="{Binding Cs}" Minimum="0" Maximum="10" Increment="0.1" FormatString="0.0" PlaceholderText="automático (4)" Width="180" HorizontalAlignment="Left" />
+                      <TextBlock Grid.Row="3" Text="HP" Classes="label" />
+                      <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Hp}" Minimum="0" Maximum="10" Increment="0.1" FormatString="0.0" PlaceholderText="automático (5)" Width="180" HorizontalAlignment="Left" />
+                      <TextBlock Grid.Row="4" Text="Semente" Classes="label" ToolTip.Tip="Outra semente gera outro mapa com o mesmo timing" />
+                      <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding Seed}" Minimum="0" Maximum="2000000000" Increment="1" FormatString="0" Width="180" HorizontalAlignment="Left" />
+                    </Grid>
+                    <Grid ColumnDefinitions="140,*" IsVisible="{Binding IsMapperatorinator}">
+                      <TextBlock Text="Estilo do ano" Classes="label" ToolTip.Tip="O Mapperatorinator imita os mapas daquele ano (2007 a 2024)" />
+                      <NumericUpDown Grid.Column="1" Value="{Binding Year}" Minimum="2007" Maximum="2024" Increment="1" FormatString="0" Width="180" HorizontalAlignment="Left" />
+                    </Grid>
+                    <TextBlock Text="Correção de timing" FontWeight="SemiBold" Margin="0,8,0,0" />
+                    <TextBlock Text="Deixe vazio para usar o BPM detectado. O offset é acústico: onde o primeiro tempo forte soa, em ms. A convenção de 15 ms do osu! é aplicada ao gravar o mapa; não a some aqui."
+                               Classes="hint" />
+                    <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto" RowSpacing="6">
+                      <TextBlock Grid.Row="0" Text="BPM" Classes="label" />
+                      <NumericUpDown Grid.Row="0" Grid.Column="1" Value="{Binding TimingBpm}" Minimum="40" Maximum="400" Increment="0.01" FormatString="0.###" PlaceholderText="detectado" Width="180" HorizontalAlignment="Left" />
+                      <TextBlock Grid.Row="1" Text="Offset (ms)" Classes="label" />
+                      <NumericUpDown Grid.Row="1" Grid.Column="1" Value="{Binding TimingOffsetMs}" Minimum="-10000" Maximum="600000" Increment="1" FormatString="0.#" PlaceholderText="detectado" Width="180" HorizontalAlignment="Left" />
+                    </Grid>
+                  </StackPanel>
+                </Expander>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel>
+                <TextBlock Text="MAPSET" Classes="section" />
+                <TextBlock Text="Várias dificuldades da mesma música num .osz só. Cada uma vira uma revisão; o resto (modelo, estilo, fundo) é o mesmo." Classes="hint" Margin="0,0,0,8" />
+                <ItemsControl ItemsSource="{Binding MapsetChoices}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:MapsetChoice">
+                      <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,2">
+                        <CheckBox IsChecked="{Binding IsSelected}" />
+                        <TextBox Text="{Binding Name}" Width="160" />
+                        <NumericUpDown Value="{Binding Stars}" Minimum="1" Maximum="9" Increment="0.1" FormatString="0.0★" Width="130" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                  <Button Content="Gerar mapset" Command="{Binding GenerateMapsetCommand}" Margin="0" />
+                  <TextBlock Text="{Binding PackageSummary}" Classes="hint" VerticalAlignment="Center" Margin="12,0,0,0" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel>
+                <TextBlock Text="METADADOS" Classes="section" />
+                <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                  <TextBlock Grid.Row="0" Text="Título *" Classes="label" />
+                  <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Title}" />
+                  <TextBlock Grid.Row="1" Text="Artista *" Classes="label" ToolTip.Tip="Quem canta ou toca a música (não é o mapper)" />
+                  <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Artist}" PlaceholderText="quem canta ou toca" />
+                  <TextBlock Grid.Row="2" Text="Mapper *" Classes="label" ToolTip.Tip="Aparece como criador do beatmap no osu!" />
+                  <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Creator}" PlaceholderText="seu nome no osu!" />
+                  <TextBlock Grid.Row="3" Text="Dificuldade *" Classes="label" />
+                  <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding DifficultyName}" PlaceholderText="ex.: Insane" />
+                </Grid>
+                <Expander Header="Unicode, origem e tags" Margin="0,12,0,0" HorizontalAlignment="Stretch">
+                  <Grid ColumnDefinitions="140,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+                    <TextBlock Grid.Row="0" Text="Título (Unicode)" Classes="label" />
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding TitleUnicode}" PlaceholderText="ex.: 風の歌" />
+                    <TextBlock Grid.Row="1" Text="Artista (Unicode)" Classes="label" />
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding ArtistUnicode}" />
+                    <TextBlock Grid.Row="2" Text="Origem" Classes="label" ToolTip.Tip="Anime, jogo ou álbum, quando houver" />
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Source}" />
+                    <TextBlock Grid.Row="3" Text="Tags" Classes="label" />
+                    <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding Tags}" PlaceholderText="separadas por espaço" />
+                  </Grid>
+                </Expander>
+                <TextBlock Text="{Binding MetadataProblems}" Classes="error" Margin="0,8,0,0"
+                           IsVisible="{Binding MetadataProblems, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                <StackPanel Orientation="Horizontal" Margin="0,12,0,0" Spacing="4">
+                  <Button Content="Salvar metadados" Command="{Binding SaveMetadataCommand}" Margin="0" />
+                  <TextBlock Text="não analisa nem gera de novo" Classes="hint" VerticalAlignment="Center" Margin="8,0,0,0" />
+                </StackPanel>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+
+        <!-- Right: do it, and what came out -->
+        <ScrollViewer Grid.Row="1" Grid.Column="1">
+          <StackPanel>
+            <Border Classes="card">
+              <StackPanel>
+                <TextBlock Text="MAPA" Classes="section" />
+                <WrapPanel>
+                  <Button Content="Gerar mapa" Command="{Binding GenerateCommand}" Classes="primary" />
+                  <Button Content="Gerar prévia (30 s)" Command="{Binding PreviewCommand}" IsVisible="{Binding IsMapperatorinator}" VerticalAlignment="Center"
+                          ToolTip.Tip="Mapeia só o trecho mais forte da música, para conferir estrelas e estilo em poucos minutos" />
+                  <Button Content="Cancelar" Command="{Binding CancelCommand}" IsVisible="{Binding IsBusy}" VerticalAlignment="Center" />
+                  <Button Content="Só analisar" Command="{Binding AnalyseCommand}" VerticalAlignment="Center" ToolTip.Tip="Detecta BPM e offset sem gerar; Gerar já analisa quando precisa" />
+                </WrapPanel>
+                <TextBlock Text="{Binding EstimateText}" Classes="hint" IsVisible="{Binding EstimateText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                <StackPanel IsVisible="{Binding IsBusy}" Spacing="6" Margin="0,8,0,4">
+                  <ProgressBar IsIndeterminate="{Binding ProgressIndeterminate}" Minimum="0" Maximum="1" Value="{Binding ProgressFraction}" />
+                  <DockPanel>
+                    <TextBlock DockPanel.Dock="Right" Text="{Binding RemainingText}" Classes="hint" VerticalAlignment="Center" Margin="8,0,0,0" />
+                    <TextBlock Text="{Binding StageText}" TextWrapping="Wrap" />
+                  </DockPanel>
+                </StackPanel>
+                <ItemsControl ItemsSource="{Binding StageLog}" Margin="0,2,0,0">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="x:String">
+                      <TextBlock Text="{Binding StringFormat='✓ {0}'}" Classes="hint" />
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Border Background="{StaticResource PinkSoftBrush}" CornerRadius="8" Padding="12,10" Margin="0,8,0,0"
+                        IsVisible="{Binding ResultText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                  <StackPanel Spacing="4">
+                    <TextBlock Text="{Binding ResultText}" TextWrapping="Wrap" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding ResultWarning}" Classes="warning"
+                               IsVisible="{Binding ResultWarning, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                  </StackPanel>
+                </Border>
+
+                <WrapPanel Margin="0,12,0,0">
+                  <Button Content="Abrir no osu!" Command="{Binding OpenInOsuCommand}" ToolTip.Tip="Exporta e abre uma cópia do pacote no programa associado a .osz" />
+                  <Button Content="Exportar .osz" Command="{Binding ExportCommand}" />
+                  <Button Content="Abrir pasta" Command="{Binding OpenFolderCommand}" />
+                </WrapPanel>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding Timeline, Converter={x:Static ObjectConverters.IsNotNull}}">
+              <StackPanel Spacing="6">
+                <TextBlock Text="VERIFICAÇÃO" Classes="section" />
+                <views:MapTimeline Data="{Binding Timeline}" Height="96" ToolTip.Tip="Cinza: volume da música. Rosa: densidade de notas. Marcas no alto: pontos a conferir. Faixa clara: trecho da prévia." />
+                <TextBlock Text="{Binding ReportSummary}" TextWrapping="Wrap" FontWeight="SemiBold" Margin="0,4,0,0" />
+                <ItemsControl ItemsSource="{Binding Issues}">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:IssueRow">
+                      <Grid ColumnDefinitions="14,84,*" Margin="0,3">
+                        <Ellipse Width="8" Height="8" Fill="{Binding Brush}" VerticalAlignment="Center" />
+                        <TextBlock Grid.Column="1" Text="{Binding When}" FontFamily="Cascadia Mono,Consolas,monospace" FontSize="12" VerticalAlignment="Center" Classes="hint" />
+                        <TextBlock Grid.Column="2" Text="{Binding Message}" TextWrapping="Wrap" />
+                      </Grid>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel Spacing="4">
+                <TextBlock Text="TIMING" Classes="section" />
+                <TextBlock Text="{Binding AnalysisText}" TextWrapping="Wrap" />
+                <TextBlock Text="{Binding AnalysisWarning}" Classes="warning"
+                           IsVisible="{Binding AnalysisWarning, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+              </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+              <StackPanel>
+                <TextBlock Text="REVISÕES" Classes="section" />
+                <TextBlock Text="Cada geração ou mudança de metadados cria uma revisão; as anteriores ficam guardadas. Marque as que vão no .osz (uma por dificuldade)." Classes="hint" />
+                <ItemsControl ItemsSource="{Binding Revisions}" Margin="0,8,0,0">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RevisionRow">
+                      <DockPanel Margin="0,1">
+                        <CheckBox DockPanel.Dock="Left" IsChecked="{Binding InPackage, Mode=OneWay}" IsEnabled="{Binding CanPackage}" MinWidth="0" Padding="4,0" Margin="0,0,4,0"
+                                  ToolTip.Tip="Vai no .osz"
+                                  Command="{Binding $parent[ItemsControl].((vm:MainViewModel)DataContext).TogglePackageCommand}" CommandParameter="{Binding}" />
+                        <TextBlock Text="{Binding Label}" FontFamily="Cascadia Mono,Consolas,monospace" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ItemsControl>
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </Grid>
+    </Panel>
+  </DockPanel>
+</Window>

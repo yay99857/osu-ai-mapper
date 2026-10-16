@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>osu-ai-mapper</AssemblyName>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets/app.ico</ApplicationIcon>
+    <!-- Audio playback uses Windows APIs (NAudio); Windows x64 is the MVP platform. -->
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <!-- Lets the Linux CI job build and run the headless UI tests. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="OsuAi.Desktop.Tests" />
+    <AvaloniaResource Include="Assets/app.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia" />
+    <PackageReference Include="Avalonia.Desktop" />
+    <PackageReference Include="Avalonia.Themes.Fluent" />
+    <PackageReference Include="Avalonia.Fonts.Inter" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="NAudio" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\application\OsuAi.Application.csproj" />
+  </ItemGroup>
+</Project>

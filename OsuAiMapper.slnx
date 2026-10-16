@@ -1,0 +1,44 @@
+<Solution>
+  <Folder Name="/apps/" />
+  <Folder Name="/apps/cli/">
+    <Project Path="apps/cli/OsuAi.Cli.csproj" />
+  </Folder>
+  <Folder Name="/apps/desktop/">
+    <Project Path="apps/desktop/OsuAi.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/engines/" />
+  <Folder Name="/engines/generation/">
+    <Project Path="engines/generation/OsuAi.Generation.csproj" />
+  </Folder>
+  <Folder Name="/packages/" />
+  <Folder Name="/packages/application/">
+    <Project Path="packages/application/OsuAi.Application.csproj" />
+  </Folder>
+  <Folder Name="/packages/beatmap-core/">
+    <Project Path="packages/beatmap-core/OsuAi.BeatmapCore.csproj" />
+  </Folder>
+  <Folder Name="/packages/osu-adapter/">
+    <Project Path="packages/osu-adapter/OsuAi.OsuAdapter.csproj" />
+  </Folder>
+  <Folder Name="/packages/project-store/">
+    <Project Path="packages/project-store/OsuAi.ProjectStore.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/OsuAi.Application.Tests/OsuAi.Application.Tests.csproj" />
+    <Project Path="tests/OsuAi.BeatmapCore.Tests/OsuAi.BeatmapCore.Tests.csproj" />
+    <Project Path="tests/OsuAi.DatasetBuilder.Tests/OsuAi.DatasetBuilder.Tests.csproj" />
+    <Project Path="tests/OsuAi.Desktop.Tests/OsuAi.Desktop.Tests.csproj" />
+    <Project Path="tests/OsuAi.Generation.Tests/OsuAi.Generation.Tests.csproj" />
+    <Project Path="tests/OsuAi.OsuAdapter.Tests/OsuAi.OsuAdapter.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tools/" />
+  <Folder Name="/tools/compatibility-harness/">
+    <Project Path="tools/compatibility-harness/OsuAi.CompatibilityHarness.csproj" />
+  </Folder>
+  <Folder Name="/tools/dataset-builder/">
+    <Project Path="tools/dataset-builder/OsuAi.DatasetBuilder.csproj" />
+  </Folder>
+  <Folder Name="/tools/installer/">
+    <Project Path="tools/installer/OsuAi.Installer.csproj" />
+  </Folder>
+</Solution>

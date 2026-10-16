@@ -1,0 +1,68 @@
+osu file format v14
+
+[General]
+AudioFilename: audio.wav
+AudioLeadIn: 0
+PreviewTime: -1
+Countdown: 0
+SampleSet: Soft
+StackLeniency: 0.7
+Mode: 0
+LetterboxInBreaks: 0
+WidescreenStoryboard: 0
+
+[Editor]
+DistanceSpacing: 1
+BeatDivisor: 4
+GridSize: 32
+TimelineZoom: 1
+
+[Metadata]
+Title:Samples Kiai
+Artist:osu-ai-mapper fixtures
+Creator:osu-ai-mapper
+Version:Samples
+Source:
+Tags:fixture synthetic
+BeatmapID:0
+BeatmapSetID:-1
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:8
+ApproachRate:9
+SliderMultiplier:1.4
+SliderTickRate:1
+
+[Events]
+//Background and Video events
+//Break Periods
+//Storyboard Layer 0 (Background)
+
+[TimingPoints]
+1000,500,4,2,0,60,1,0
+3000,-100,4,2,1,80,0,1
+5000,-100,4,3,2,40,0,0
+7000,-100,4,1,0,100,0,1
+9000,-100,4,1,0,100,0,0
+
+[HitObjects]
+80,150,1000,5,0,0:1:0:0:
+102,200,1500,1,2,1:2:1:30:
+124,150,2000,1,4,2:3:2:70:
+146,200,2500,1,8,3:0:0:100:
+168,150,3000,5,6,0:1:1:0:
+190,200,3500,1,10,1:2:2:30:
+212,150,4000,1,12,2:3:0:70:
+234,200,4500,1,14,3:0:1:100:
+256,150,5000,5,0,0:1:2:0:
+278,200,5500,1,2,1:2:0:30:
+300,150,6000,1,4,2:3:1:70:
+322,200,6500,1,8,3:0:2:100:
+344,150,7000,5,6,0:1:0:0:
+366,200,7500,1,10,1:2:1:30:
+388,150,8000,1,12,2:3:2:70:
+410,200,8500,1,14,3:0:0:100:
+200,300,9000,6,2,L|330:300,1,105,2|8,2:1|3:2,1:2:3:50:
+300,250,10000,1,0,0:0:0:0:hit_custom.wav

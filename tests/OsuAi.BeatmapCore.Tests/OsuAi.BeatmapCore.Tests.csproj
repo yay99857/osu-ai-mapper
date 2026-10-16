@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="JsonSchema.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\beatmap-core\OsuAi.BeatmapCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\contracts\**\*.json" LinkBase="contracts" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

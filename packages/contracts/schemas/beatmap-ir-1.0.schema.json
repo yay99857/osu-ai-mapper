@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://osu-ai-mapper.local/schemas/beatmap-ir-1.0.schema.json",
+  "title": "BeatmapIR 1.0",
+  "description": "Playable objects of one osu!standard difficulty. Times are integer microseconds from the start of the decoded audio; coordinates are osu! pixels in the nominal 512x384 playfield. Absent optional properties mean unknown; empty arrays mean known and empty.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "id", "revisionId", "ruleset", "metadata", "assets", "settings", "timing", "controls", "breaks", "objects", "locks", "provenance", "exportProfile"],
+  "properties": {
+    "schemaVersion": { "const": "1.0" },
+    "id": { "$ref": "#/$defs/uuid" },
+    "revisionId": { "$ref": "#/$defs/uuid" },
+    "parentRevisionId": { "$ref": "#/$defs/uuid" },
+    "ruleset": { "const": "osu-standard" },
+    "metadata": { "$ref": "#/$defs/metadata" },
+    "assets": { "$ref": "#/$defs/assets" },
+    "settings": { "$ref": "#/$defs/settings" },
+    "timing": { "$ref": "timing-map-1.0.schema.json" },
+    "controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["effects"],
+      "description": "Slider velocity and hit samples are deliberately absent: per-object values are the single source of truth.",
+      "properties": {
+        "effects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["timeUs", "kiai"],
+            "properties": {
+              "timeUs": { "$ref": "#/$defs/timeUs" },
+              "kiai": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "breaks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["startTimeUs", "endTimeUs"],
+        "properties": {
+          "startTimeUs": { "$ref": "#/$defs/timeUs" },
+          "endTimeUs": { "$ref": "#/$defs/timeUs" }
+        }
+      }
+    },
+    "objects": { "type": "array", "items": { "$ref": "#/$defs/hitObject" } },
+    "locks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["objectId", "fields"],
+        "properties": {
+          "objectId": { "$ref": "#/$defs/uuid" },
+          "fields": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["createdBy"],
+      "properties": {
+        "createdBy": { "type": "string", "minLength": 1 },
+        "engineVersion": { "type": "string" },
+        "sourceSha256": { "$ref": "#/$defs/sha256" },
+        "sourceFormatVersion": { "type": "integer" }
+      }
+    },
+    "importProfile": { "type": "string" },
+    "exportProfile": { "enum": ["osu-interchange-v1"] }
+  },
+  "$defs": {
+    "uuid": { "type": "string", "format": "uuid" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "timeUs": { "type": "integer", "description": "Microseconds from the start of the decoded audio." },
+    "vector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+    },
+    "assetRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "relativePath"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "relativePath": { "type": "string", "minLength": 1, "not": { "pattern": "(^[/\\\\])|(^[A-Za-z]:)|(\\.\\.)" } },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "mimeType": { "type": "string" },
+        "byteSize": { "type": "integer", "minimum": 0 },
+        "rightsRef": { "type": "string" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "artist", "creator", "difficultyName", "tags"],
+      "properties": {
+        "title": { "type": "string" },
+        "titleUnicode": { "type": "string" },
+        "artist": { "type": "string" },
+        "artistUnicode": { "type": "string" },
+        "creator": { "type": "string" },
+        "difficultyName": { "type": "string" },
+        "source": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "onlineIds": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Only ever carried over from an import. Never invented.",
+          "properties": {
+            "beatmapId": { "type": "integer", "minimum": 1 },
+            "beatmapSetId": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audio", "samples"],
+      "properties": {
+        "audio": { "$ref": "#/$defs/assetRef" },
+        "background": { "$ref": "#/$defs/assetRef" },
+        "samples": { "type": "array", "items": { "$ref": "#/$defs/assetRef" } }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ar", "od", "cs", "hp", "sliderMultiplier", "sliderTickRate", "stackLeniency"],
+      "properties": {
+        "ar": { "type": "number", "minimum": 0, "maximum": 10 },
+        "od": { "type": "number", "minimum": 0, "maximum": 10 },
+        "cs": { "type": "number", "minimum": 0, "maximum": 10 },
+        "hp": { "type": "number", "minimum": 0, "maximum": 10 },
+        "sliderMultiplier": { "type": "number", "minimum": 0.4, "maximum": 3.6 },
+        "sliderTickRate": { "type": "number", "minimum": 0.5, "maximum": 8 },
+        "stackLeniency": { "type": "number", "minimum": 0, "maximum": 1 },
+        "previewTimeUs": { "$ref": "#/$defs/timeUs" }
+      }
+    },
+    "hitSample": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "bank", "volume", "autoBank"],
+      "properties": {
+        "name": { "enum": ["hitnormal", "hitwhistle", "hitfinish", "hitclap"] },
+        "bank": { "enum": ["normal", "soft", "drum"] },
+        "volume": { "type": "integer", "minimum": 0, "maximum": 100 },
+        "suffix": { "type": "string" },
+        "autoBank": { "type": "boolean", "description": "Addition bank follows the hitnormal bank." }
+      }
+    },
+    "samples": { "type": "array", "items": { "$ref": "#/$defs/hitSample" } },
+    "objectCommon": {
+      "type": "object",
+      "required": ["kind", "id", "timeUs", "position", "newCombo", "comboSkip", "samples", "lockedFields"],
+      "properties": {
+        "kind": { "enum": ["circle", "slider", "spinner"] },
+        "id": { "$ref": "#/$defs/uuid" },
+        "timeUs": { "$ref": "#/$defs/timeUs" },
+        "position": { "$ref": "#/$defs/vector" },
+        "newCombo": { "type": "boolean" },
+        "comboSkip": { "type": "integer", "minimum": 0 },
+        "samples": { "$ref": "#/$defs/samples" },
+        "origin": { "type": "string" },
+        "planEventId": { "$ref": "#/$defs/uuid" },
+        "lockedFields": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "hitObject": {
+      "oneOf": [
+        { "$ref": "#/$defs/circle" },
+        { "$ref": "#/$defs/slider" },
+        { "$ref": "#/$defs/spinner" }
+      ]
+    },
+    "circle": {
+      "$ref": "#/$defs/objectCommon",
+      "properties": { "kind": { "const": "circle" } },
+      "unevaluatedProperties": false
+    },
+    "spinner": {
+      "$ref": "#/$defs/objectCommon",
+      "required": ["endTimeUs"],
+      "properties": {
+        "kind": { "const": "spinner" },
+        "endTimeUs": { "$ref": "#/$defs/timeUs" }
+      },
+      "unevaluatedProperties": false
+    },
+    "slider": {
+      "$ref": "#/$defs/objectCommon",
+      "required": ["path", "spanCount", "svMultiplier", "nodeSamples", "generateTicks"],
+      "properties": {
+        "kind": { "const": "slider" },
+        "path": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["coordinateSpace", "controlPoints"],
+          "properties": {
+            "coordinateSpace": { "const": "relative-to-head" },
+            "controlPoints": {
+              "type": "array",
+              "minItems": 2,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["x", "y"],
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "segmentType": { "enum": ["linear", "bezier", "perfect-curve", "catmull", "b-spline"] },
+                  "degree": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          }
+        },
+        "expectedDistancePx": { "type": "number", "exclusiveMinimum": 0 },
+        "spanCount": { "type": "integer", "minimum": 1, "description": "1 = head to tail; official repeat count is spanCount - 1." },
+        "svMultiplier": { "type": "number", "minimum": 0.1, "maximum": 10 },
+        "nodeSamples": { "type": "array", "items": { "$ref": "#/$defs/samples" } },
+        "generateTicks": { "type": "boolean" },
+        "computed": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Derived by the official engine; invalid as soon as authored data changes.",
+          "required": ["durationUs", "endPosition", "tickCount", "distancePx", "engine"],
+          "properties": {
+            "durationUs": { "type": "integer", "minimum": 0 },
+            "endPosition": { "$ref": "#/$defs/vector" },
+            "tickCount": { "type": "integer", "minimum": 0 },
+            "distancePx": { "type": "number", "minimum": 0 },
+            "engine": { "type": "string" }
+          }
+        }
+      },
+      "unevaluatedProperties": false
+    }
+  }
+}

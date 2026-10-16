@@ -1,0 +1,99 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:OsuAi.Desktop.ViewModels"
+        x:Class="OsuAi.Desktop.Views.ModelsWindow"
+        x:DataType="vm:ModelsViewModel"
+        Icon="avares://osu-ai-mapper/Assets/app.ico"
+        Title="Gerenciar modelos — osu-ai-mapper"
+        Width="980" Height="760" MinWidth="760" MinHeight="560">
+
+  <DockPanel Margin="16,8,16,12">
+    <DockPanel DockPanel.Dock="Top">
+      <Button Content="Atualizar" Command="{Binding RefreshCommand}" DockPanel.Dock="Right" />
+      <TextBlock Text="Modelos, treinos curtos e tarefas em segundo plano" Classes="hint" VerticalAlignment="Center" />
+    </DockPanel>
+    <TextBlock DockPanel.Dock="Bottom" Text="{Binding ErrorText}" Classes="error" TextWrapping="Wrap"
+               IsVisible="{Binding ErrorText, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" Margin="0,8,0,0" />
+
+    <ScrollViewer>
+      <StackPanel Spacing="4" Margin="0,0,12,0">
+
+        <TextBlock Text="Modelos instalados" Classes="section" />
+        <TextBlock Text="O modelo padrão é o que projetos novos usam. Os números vêm da ficha de cada modelo (validação: mapas que o modelo não viu no treino)."
+                   Classes="hint" TextWrapping="Wrap" />
+        <ItemsControl ItemsSource="{Binding Models}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:ModelRow">
+              <Border BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Padding="10" Margin="0,6,0,0">
+                <DockPanel>
+                  <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Spacing="6">
+                    <TextBlock Text="padrão" FontWeight="SemiBold" VerticalAlignment="Center" IsVisible="{Binding IsDefault}" />
+                    <Button Content="Definir como padrão"
+                            Command="{Binding $parent[ItemsControl].((vm:ModelsViewModel)DataContext).SetDefaultCommand}" CommandParameter="{Binding}" />
+                    <Button Content="Restaurar anterior" IsVisible="{Binding HasBackup}"
+                            Command="{Binding $parent[ItemsControl].((vm:ModelsViewModel)DataContext).RestoreCommand}" CommandParameter="{Binding}" />
+                  </StackPanel>
+                  <StackPanel Spacing="2">
+                    <TextBlock Text="{Binding Name}" FontWeight="SemiBold" />
+                    <TextBlock Text="{Binding File}" Classes="hint" />
+                    <TextBlock Text="{Binding Details}" Classes="hint" TextWrapping="Wrap" />
+                    <TextBlock Text="{Binding Summary}" TextWrapping="Wrap" IsVisible="{Binding HasSummary}" />
+                  </StackPanel>
+                </DockPanel>
+              </Border>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Text="Micro-treino" Classes="section" />
+        <TextBlock Text="Continua o treino do modelo escolhido com uma amostra de mapas humanos e mede antes e depois nos mesmos mapas de referência. Só substitui o modelo se a pontuação subir."
+                   Classes="hint" TextWrapping="Wrap" />
+        <Grid ColumnDefinitions="170,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="6" Margin="0,6,0,0" IsEnabled="{Binding IsIdle}">
+          <TextBlock Grid.Row="0" Text="Modelo" VerticalAlignment="Center" />
+          <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding LearnableModels}" SelectedIndex="{Binding LearnModelIndex}" Width="360">
+            <ComboBox.ItemTemplate>
+              <DataTemplate x:DataType="vm:ModelRow">
+                <TextBlock Text="{Binding Name}" />
+              </DataTemplate>
+            </ComboBox.ItemTemplate>
+          </ComboBox>
+          <TextBlock Grid.Row="1" Text="Estudar" VerticalAlignment="Center" />
+          <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding FocusNames}" SelectedIndex="{Binding FocusIndex}" Width="360" />
+          <TextBlock Grid.Row="2" Text="Mapper" VerticalAlignment="Center" IsVisible="{Binding NeedsMapper}" />
+          <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding MapperName}" PlaceholderText="ex.: Sotarks" Width="360" HorizontalAlignment="Left" IsVisible="{Binding NeedsMapper}" />
+          <TextBlock Grid.Row="3" Text="Mapas por rodada" VerticalAlignment="Center" />
+          <NumericUpDown Grid.Row="3" Grid.Column="1" Value="{Binding Maps}" Minimum="20" Maximum="1000" Increment="20" FormatString="0" Width="160" HorizontalAlignment="Left" />
+          <TextBlock Grid.Row="4" Text="Quanto aprender" VerticalAlignment="Center" ToolTip.Tip="Árvores acrescentadas a cada parte do modelo" />
+          <NumericUpDown Grid.Row="4" Grid.Column="1" Value="{Binding Rounds}" Minimum="5" Maximum="200" Increment="5" FormatString="0" Width="160" HorizontalAlignment="Left" />
+          <CheckBox Grid.Row="5" Grid.Column="1" IsChecked="{Binding InstallIfBetter}" Content="Instalar se melhorar (o modelo atual fica como backup)" />
+        </Grid>
+        <StackPanel Orientation="Horizontal" Spacing="8" Margin="0,8,0,0">
+          <Button Content="Iniciar rodada" Command="{Binding StartLearningCommand}" />
+          <Button Content="Cancelar" Command="{Binding CancelLearningCommand}" />
+        </StackPanel>
+        <ProgressBar Value="{Binding LearnPercent}" Maximum="100" Height="16" Margin="0,8,0,0" ShowProgressText="True" />
+        <TextBlock Text="{Binding LearnStage}" Classes="hint" />
+        <TextBlock Text="{Binding LearnResult}" TextWrapping="Wrap" FontWeight="SemiBold"
+                   IsVisible="{Binding LearnResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <TextBlock Text="Histórico de rodadas" Classes="section" />
+        <ItemsControl ItemsSource="{Binding History}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <TextBlock Text="Tarefas em segundo plano" Classes="section" />
+        <ItemsControl ItemsSource="{Binding Jobs}">
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <TextBlock Text="{Binding}" TextWrapping="Wrap" Margin="0,2" />
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </StackPanel>
+    </ScrollViewer>
+  </DockPanel>
+</Window>

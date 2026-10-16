@@ -1,0 +1,33 @@
+[project]
+name = "osu-ai-sequence"
+version = "0.1.0"
+description = "Pulso-S: a small transformer that reads whole phrases and decides rhythm, object type, slider length and distance."
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "osu-ai-rhythm",
+    "torch==2.7.*",
+    "numpy>=1.26",
+    "threadpoolctl>=3.5",
+]
+
+[project.scripts]
+osu-ai-sequence = "osu_ai_sequence.cli:main"
+
+[tool.uv.sources]
+osu-ai-rhythm = { path = "../rhythm", editable = true }
+torch = { index = "pytorch-cpu" }
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

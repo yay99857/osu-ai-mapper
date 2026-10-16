@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Rhythm selection and procedural placement. Works on the IR only; difficulty comes in through a delegate.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\packages\beatmap-core\OsuAi.BeatmapCore.csproj" />
+  </ItemGroup>
+</Project>

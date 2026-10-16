@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://osu-ai-mapper.local/schemas/timing-map-1.0.schema.json",
+  "title": "TimingMap 1.0",
+  "description": "Constant-tempo segments. Beat positions are exact rationals; a beat is a quarter note of the editor grid.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["segments", "mappingConvention"],
+  "properties": {
+    "segments": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "startTimeUs", "startBeat", "beatLengthUs", "omitFirstBarLine", "source"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "startTimeUs": { "type": "integer", "description": "May be negative." },
+          "startBeat": { "$ref": "#/$defs/rational" },
+          "beatLengthUs": { "type": "number", "exclusiveMinimum": 0 },
+          "meter": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["numerator", "denominator"],
+            "properties": {
+              "numerator": { "type": "integer", "minimum": 1 },
+              "denominator": { "type": "integer", "minimum": 1 }
+            }
+          },
+          "barPhaseBeats": { "$ref": "#/$defs/rational" },
+          "omitFirstBarLine": { "type": "boolean" },
+          "source": { "enum": ["detected", "manual", "imported"] },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "observationsRef": { "type": "string" },
+    "mappingConvention": { "const": "quarter-note-beat" }
+  },
+  "$defs": {
+    "rational": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["numerator", "denominator"],
+      "properties": {
+        "numerator": { "type": "integer" },
+        "denominator": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

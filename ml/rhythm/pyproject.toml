@@ -1,0 +1,25 @@
+[project]
+name = "osu-ai-rhythm"
+version = "0.1.0"
+description = "B2 rhythm model: where human mappers place hit objects, from audio grid features."
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.1",
+    "scikit-learn>=1.6",
+    "joblib>=1.4",
+]
+
+[project.scripts]
+osu-ai-rhythm = "osu_ai_rhythm.cli:main"
+osu-ai-learn = "osu_ai_rhythm.learn:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]

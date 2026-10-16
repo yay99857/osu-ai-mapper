@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>The only boundary with ppy/osu: decoding, encoding, packaging and official difficulty.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="OsuAi.OsuAdapter.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\beatmap-core\OsuAi.BeatmapCore.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ppy.osu.Game" />
+    <PackageReference Include="ppy.osu.Game.Rulesets.Osu" />
+  </ItemGroup>
+</Project>

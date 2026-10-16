@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>A beatmap project on disk: manifest, managed audio, cached analysis and immutable revisions, written atomically.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\beatmap-core\OsuAi.BeatmapCore.csproj" />
+  </ItemGroup>
+</Project>

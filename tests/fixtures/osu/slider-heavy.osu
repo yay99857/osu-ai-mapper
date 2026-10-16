@@ -1,0 +1,57 @@
+osu file format v14
+
+[General]
+AudioFilename: audio.wav
+AudioLeadIn: 0
+PreviewTime: -1
+Countdown: 0
+SampleSet: Normal
+StackLeniency: 0.7
+Mode: 0
+LetterboxInBreaks: 0
+WidescreenStoryboard: 0
+
+[Editor]
+DistanceSpacing: 1
+BeatDivisor: 4
+GridSize: 32
+TimelineZoom: 1
+
+[Metadata]
+Title:Slider Heavy
+Artist:osu-ai-mapper fixtures
+Creator:osu-ai-mapper
+Version:Sliders
+Source:
+Tags:fixture synthetic
+BeatmapID:0
+BeatmapSetID:-1
+
+[Difficulty]
+HPDrainRate:5
+CircleSize:4
+OverallDifficulty:8
+ApproachRate:9
+SliderMultiplier:1.6
+SliderTickRate:2
+
+[Events]
+//Background and Video events
+//Break Periods
+//Storyboard Layer 0 (Background)
+
+[TimingPoints]
+1000,375,4,2,0,60,1,0
+4000,-80,4,2,0,60,0,0
+7000,-150,4,2,0,60,0,0
+
+[HitObjects]
+100,100,1000,6,0,L|250:100,1,150,0|0,0:0|0:0,0:0:0:0:
+300,150,1750,2,0,P|350:220|300:290,1,150,0|0,0:0|0:0,0:0:0:0:
+200,300,2500,2,0,B|150:250|200:200|200:200|250:150|200:100,1,240,0|0,0:0|0:0,0:0:0:0:
+350,80,3250,2,0,C|400:120|380:180|420:240,1,180,0|0,0:0|0:0,0:0:0:0:
+100,250,4000,6,0,B|60:200|100:150|160:150,1,200,0|0,0:0|0:0,0:0:0:0:
+250,200,5125,2,0,L|330:200|330:280,1,100,0|0,0:0|0:0,0:0:0:0:
+400,300,7000,6,0,P|440:260|400:200,1,90,0|0,0:0|0:0,0:0:0:0:
+300,150,8125,2,0,B|250:120|200:180,1,60,0|0,0:0|0:0,0:0:0:0:
+150,250,9250,2,0,L|150:330,1,40,0|0,0:0|0:0,0:0:0:0:
