@@ -21,6 +21,7 @@
           <Button Content="Novo projeto…" Click="OnNewProject" Classes="bar" />
           <Button Content="Abrir projeto…" Click="OnOpenProject" Classes="bar" />
           <Button Content="Gerenciar modelos…" Click="OnManageModels" Classes="bar" />
+          <Button Content="Verificar ambiente…" Click="OnCheckEnvironment" Classes="bar" />
           <Button Content="Fechar projeto" Command="{Binding CloseProjectCommand}" IsVisible="{Binding HasProject}" Classes="bar" />
         </StackPanel>
         <TextBlock Text="{Binding ProjectPath}" VerticalAlignment="Center" Classes="hint" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap" />

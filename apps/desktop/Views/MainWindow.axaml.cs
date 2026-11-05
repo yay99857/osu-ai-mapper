@@ -51,6 +51,9 @@ public partial class MainWindow : Window
         TaskbarFlash.MessageBeep(TaskbarFlash.BeepInformation);
     }
 
+    private async void OnCheckEnvironment(object? sender, RoutedEventArgs e) =>
+        await new EnvironmentWindow { DataContext = ViewModel.CreateEnvironmentCheck() }.ShowDialog(this);
+
     private async void OnManageModels(object? sender, RoutedEventArgs e)
     {
         var manager = ViewModel.CreateModelsManager();
