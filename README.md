@@ -13,7 +13,7 @@ Requer .NET 10 SDK, `uv` para a análise Python e o checkout do Mapperatorinator
 seu ambiente em `artifacts/external/Mapperatorinator/.venv`.
 
 ```powershell
-dotnet run --project apps/desktop -c Release
+dotnet run --project apps/desktop -c Release -f net10.0-windows
 ```
 
 Importe uma música, escolha a pasta do projeto, confira título, artista e mapper,
@@ -33,6 +33,22 @@ Estilo: `--descriptors "skillset/jumps,style/clean"`, `--mapper sotarks` ou um I
 conhecido pelo modelo, `--strong-style true` e `--year 2023`.
 Timing: `--bpm 174 --offset-ms 412.5`; o offset informado é acústico.
 Ctrl+C cancela a etapa em execução.
+
+### Linux (Omarchy/Arch)
+
+```bash
+sudo pacman -S --needed dotnet-sdk git ffmpeg mpv   # uv: https://docs.astral.sh/uv/
+tools/linux/setup.sh            # análise Python + Mapperatorinator com PyTorch CPU
+dotnet run --project apps/desktop -c Release -f net10.0
+tools/linux/install-desktop.sh  # opcional: "osu! AI Mapper" no launcher e `osu-ai` no terminal
+```
+
+O setup clona o Mapperatorinator no commit verificado em `tools/linux/mapperatorinator.ref`.
+O áudio toca pelo `mpv`; o aviso de fim de geração usa `notify-send`. “Abrir no osu!”
+usa `xdg-open`, que encontra o osu!lazer quando ele está associado a `.osz`.
+Sem uma GPU suportada pelo PyTorch, a geração roda na CPU (cerca de dez minutos por
+minuto de música). Para uma GPU suportada, passe o índice do PyTorch correspondente
+(veja pytorch.org/get-started): `TORCH_INDEX=https://download.pytorch.org/whl/<rocmX.Y|cuXYZ> tools/linux/setup.sh`.
 
 ## Motor e arquivos locais
 
