@@ -25,6 +25,9 @@ corrigidos. Imagens de fundo e metadados podem mudar sem regenerar os objetos.
 dotnet run --project apps/cli -c Release -- generate song.mp3 artifacts/projects/song --title "Title" --artist "Artist" --creator "Your name" --difficulty "Insane" --stars 5 --model mapperatorinator:v32
 ```
 
+Antes da primeira geração, `dotnet run --project apps/cli -c Release -- doctor` confere uv,
+FFmpeg, Mapperatorinator, pesos, disco, memória e o que o app usa no sistema.
+
 O segundo argumento é uma pasta de projeto. Comandos adicionais: `preview`,
 `regenerate`, `mapset`, `check`, `package`, `metadata`, `export` e `info`.
 Consulte a ajuda da CLI para os argumentos de cada comando.
