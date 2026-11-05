@@ -26,6 +26,7 @@ public static class Program
           metadata <project-dir> [metadata options]  change metadata; objects are kept, nothing regenerated
           export <project-dir> [--to <dir>]          package the revisions of the package as .osz
           info <project-dir>                         show the project and its revisions
+          doctor                                     check uv, FFmpeg, Mapperatorinator, weights, disk and memory
 
         metadata options:
           --title <t> --artist <a> --creator <mapper> --difficulty <name>
@@ -74,6 +75,7 @@ public static class Program
                 ["metadata", var dir, .. var rest] => Metadata(dir, Flags(rest)),
                 ["export", var dir, .. var rest] => Export(dir, Flags(rest)),
                 ["info", var dir] => Info(dir),
+                ["doctor"] => await Doctor(cancel.Token),
                 _ => Usage(),
             };
         }
@@ -86,8 +88,34 @@ public static class Program
                                        or ArgumentException or IOException or InvalidDataException)
         {
             Console.Error.WriteLine($"error: {e.Message}");
+            if (e is AnalysisFailedException or GenerationFailedException)
+                Console.Error.WriteLine("hint: 'osu-ai doctor' checks the tools a generation needs");
             return 1;
         }
+    }
+
+    /// <summary>Prints every environment check; exits 1 when one would stop a generation.</summary>
+    private static async Task<int> Doctor(CancellationToken token)
+    {
+        var tools = ToolEnvironment.Discover();
+        Console.WriteLine($"repository    {tools.RepositoryRoot}");
+        var checks = await EnvironmentDoctor.RunAsync(tools, token);
+        int width = checks.Max(c => c.Name.Length);
+
+        foreach (var check in checks)
+        {
+            string mark = check.Status switch { CheckStatus.Ok => "ok  ", CheckStatus.Warning => "warn", _ => "FAIL" };
+            Console.WriteLine($"{mark}  {check.Name.PadRight(width)}  {check.Detail}");
+            if (check.Status != CheckStatus.Ok && check.Fix is { } fix)
+                Console.WriteLine($"      {new string(' ', width)}  -> {fix}");
+        }
+
+        int errors = checks.Count(c => c.Status == CheckStatus.Error);
+        int warnings = checks.Count(c => c.Status == CheckStatus.Warning);
+        Console.WriteLine(errors > 0
+            ? $"{errors} problem(s) stop a generation; {warnings} warning(s)."
+            : $"Ready to generate; {warnings} warning(s).");
+        return errors > 0 ? 1 : 0;
     }
 
     private static async Task<int> Generate(string audio, string dir, Dictionary<string, string> flags, CancellationToken token)

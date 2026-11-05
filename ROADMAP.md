@@ -1,6 +1,6 @@
 # Estado atual e roadmap
 
-Atualizado em 15/10/2026. Mapperatorinator v32 é o motor de IA adotado.
+Atualizado em 05/11/2026. Mapperatorinator v32 é o motor de IA adotado.
 O treinamento próprio, Pulso e o dataset antigo saíram do plano do produto.
 
 ## Implementado
@@ -14,6 +14,10 @@ O treinamento próprio, Pulso e o dataset antigo saíram do plano do produto.
 - Relatório de problemas, linha do tempo, fundo, metadados e mapsets.
 - Importação/exportação pelo adaptador oficial e cálculo de dificuldade fixado.
 - Instalador Windows self-contained para o app, ainda dependente do checkout e do Python.
+- Linux (Omarchy/Arch): `tools/linux/setup.sh` prepara Python e Mapperatorinator no commit
+  verificado; `tools/linux/install-desktop.sh` instala app e CLI para o usuário.
+- Verificação de ambiente (`osu-ai doctor` e “Verificar ambiente…”), também antes da primeira
+  geração da sessão.
 
 Isso descreve o código existente; não representa uma nova execução dos testes ou
 uma avaliação recente da qualidade dos mapas.
@@ -23,7 +27,7 @@ uma avaliação recente da qualidade dos mapas.
 | Prioridade | Entrega | Critério de conclusão |
 |---|---|---|
 | 1 | Encerrar a exposição dos modelos aposentados | UI e CLI orientam novas gerações ao Mapperatorinator; projetos antigos recebem mensagem clara se seus pesos não existem |
-| 2 | Simplificar o setup | Dependências e caminhos verificados antes da geração, com diagnóstico acionável |
+| 2 | Simplificar o setup | Feito na CLI e no desktop (verificação com correção sugerida); falta um setup equivalente ao `tools/linux/setup.sh` no Windows |
 | 3 | Validar qualidade em músicas novas | Comparações de ritmo, sliders, densidade e flow, acompanhadas de revisão humana |
 | 4 | Melhorar controle de dificuldade e estilo | Alvo e resultado visíveis; mudanças avaliadas sem esconder falhas de timing ou trechos vazios |
 | 5 | Tornar a instalação independente do checkout | Runtime e localização dos recursos definidos; instalação, cancelamento e desinstalação verificados |

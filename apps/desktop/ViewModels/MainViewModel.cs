@@ -183,6 +183,35 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     /// <summary>The model manager window, over the same tools and preferences.</summary>
     public ModelsViewModel CreateModelsManager() => new(new ModelAdmin(tools), preferences);
 
+    /// <summary>Whether a check this session found nothing that stops a Mapperatorinator generation.</summary>
+    private bool environmentReady;
+
+    public EnvironmentViewModel CreateEnvironmentCheck()
+    {
+        var check = new EnvironmentViewModel(tools);
+        check.Checked += checks => environmentReady = checks.All(c => c.Status != CheckStatus.Error);
+        return check;
+    }
+
+    /// <summary>
+    /// Before the first Mapperatorinator generation of the session (and after one that found
+    /// problems): the environment checks, so a missing tool shows up with its fix in seconds instead
+    /// of as a failure minutes into the work.
+    /// </summary>
+    private async Task<bool> EnsureEnvironmentAsync(CancellationToken token)
+    {
+        if (!IsMapperatorinator || environmentReady)
+            return true;
+
+        StageText = "Verificando o ambiente";
+        var checks = await EnvironmentDoctor.RunAsync(tools, token);
+        environmentReady = checks.All(c => c.Status != CheckStatus.Error);
+        if (!environmentReady)
+            ErrorText = "O ambiente não está pronto para gerar:" + Environment.NewLine + EnvironmentViewModel.ErrorsOf(checks)
+                        + Environment.NewLine + "Veja os detalhes em “Verificar ambiente…”.";
+        return environmentReady;
+    }
+
     /// <summary>After the model manager changed models or the default: list them again, keeping the current choice.</summary>
     public void ReloadModels()
     {
@@ -407,7 +436,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand(CanExecute = nameof(CanWork))]
     private async Task Generate() => await RunLong(async token =>
     {
-        if (!SaveFormToProject())
+        if (!SaveFormToProject() || !await EnsureEnvironmentAsync(token))
             return;
 
         var clock = Stopwatch.StartNew();
@@ -423,7 +452,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand(CanExecute = nameof(CanPreview))]
     private async Task Preview() => await RunLong(async token =>
     {
-        if (!SaveFormToProject())
+        if (!SaveFormToProject() || !await EnsureEnvironmentAsync(token))
             return;
 
         var clock = Stopwatch.StartNew();
@@ -437,7 +466,7 @@ public sealed partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand(CanExecute = nameof(CanGenerateMapset))]
     private async Task GenerateMapset() => await RunLong(async token =>
     {
-        if (!SaveFormToProject())
+        if (!SaveFormToProject() || !await EnsureEnvironmentAsync(token))
             return;
 
         var chosen = MapsetChoices.Where(c => c.IsSelected).Select(c => new MappingService.MapsetDifficulty(c.Name, (double)(c.Stars ?? 4))).ToArray();

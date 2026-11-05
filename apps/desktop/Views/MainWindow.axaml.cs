@@ -32,7 +32,14 @@ public partial class MainWindow : Window
     /// </summary>
     private void OnLongWorkFinished(string message)
     {
-        if (IsActive || !OperatingSystem.IsWindows() || TryGetPlatformHandle()?.Handle is not { } handle || handle == IntPtr.Zero)
+        if (IsActive)
+            return;
+        if (!OperatingSystem.IsWindows())
+        {
+            DesktopNotice.Send("osu-ai-mapper", message);
+            return;
+        }
+        if (TryGetPlatformHandle()?.Handle is not { } handle || handle == IntPtr.Zero)
             return;
         var flash = new TaskbarFlash.FlashInfo
         {
@@ -43,6 +50,9 @@ public partial class MainWindow : Window
         TaskbarFlash.FlashWindowEx(ref flash);
         TaskbarFlash.MessageBeep(TaskbarFlash.BeepInformation);
     }
+
+    private async void OnCheckEnvironment(object? sender, RoutedEventArgs e) =>
+        await new EnvironmentWindow { DataContext = ViewModel.CreateEnvironmentCheck() }.ShowDialog(this);
 
     private async void OnManageModels(object? sender, RoutedEventArgs e)
     {
@@ -118,6 +128,28 @@ public partial class MainWindow : Window
             return;
         else if (File.Exists(path))
             await CreateProjectFor(path);
+    }
+}
+
+/// <summary>
+/// The end-of-generation notice outside Windows: a desktop notification through notify-send
+/// (libnotify), which Linux notification daemons such as mako or dunst show. Missing notify-send
+/// only loses the notice.
+/// </summary>
+internal static class DesktopNotice
+{
+    public static void Send(string title, string body)
+    {
+        try
+        {
+            var start = new System.Diagnostics.ProcessStartInfo("notify-send") { UseShellExecute = false };
+            foreach (string a in new[] { "--app-name=osu-ai-mapper", "--icon=osu-ai-mapper", title, body })
+                start.ArgumentList.Add(a);
+            using var _ = System.Diagnostics.Process.Start(start);
+        }
+        catch (System.ComponentModel.Win32Exception)
+        {
+        }
     }
 }
 

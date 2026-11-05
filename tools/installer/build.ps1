@@ -16,7 +16,7 @@ if (Test-Path $out) { Remove-Item -Recurse -Force $out }
 New-Item -ItemType Directory -Force $out | Out-Null
 
 Write-Host "Publishing the desktop app (self-contained, win-x64)..."
-dotnet publish "$repo/apps/desktop/OsuAi.Desktop.csproj" -c Release -r win-x64 --self-contained -o $app -v q -nologo
+dotnet publish "$repo/apps/desktop/OsuAi.Desktop.csproj" -c Release -f net10.0-windows -r win-x64 --self-contained -o $app -v q -nologo
 if ($LASTEXITCODE -ne 0) { throw "desktop publish failed" }
 Get-ChildItem $app -Filter *.pdb | Remove-Item
 Compress-Archive -Path "$app/*" -DestinationPath $zip -CompressionLevel Optimal

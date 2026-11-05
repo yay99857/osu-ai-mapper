@@ -28,7 +28,12 @@ public sealed class ToolEnvironment
     /// <summary>A local Mapperatorinator checkout with its own virtual environment (optional engine).</summary>
     public string MapperatorinatorRoot => Path.Combine(RepositoryRoot, "artifacts", "external", "Mapperatorinator");
 
-    public string MapperatorinatorPython => Path.Combine(MapperatorinatorRoot, ".venv", "Scripts", "python.exe");
+    public string MapperatorinatorPython => VenvPython(MapperatorinatorRoot);
+
+    /// <summary>The interpreter of the virtual environment in <paramref name="projectRoot"/>/.venv, as laid out on this OS.</summary>
+    public static string VenvPython(string projectRoot) => OperatingSystem.IsWindows()
+        ? Path.Combine(projectRoot, ".venv", "Scripts", "python.exe")
+        : Path.Combine(projectRoot, ".venv", "bin", "python");
 
     public bool MapperatorinatorAvailable => File.Exists(MapperatorinatorPython) && File.Exists(Path.Combine(MapperatorinatorRoot, "inference.py"));
 

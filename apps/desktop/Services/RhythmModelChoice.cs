@@ -31,7 +31,7 @@ public sealed record RhythmModelChoice(string Name, string? Path, bool Styled)
 
         // Mapperatorinator first, so it is the default: the main engine since 2026-10-03, when a
         // local checkout with its environment is there. An engine, not a file.
-        if (File.Exists(System.IO.Path.Combine(repositoryRoot, "artifacts", "external", "Mapperatorinator", ".venv", "Scripts", "python.exe")))
+        if (File.Exists(OsuAi.Application.ToolEnvironment.VenvPython(System.IO.Path.Combine(repositoryRoot, "artifacts", "external", "Mapperatorinator"))))
             yield return new RhythmModelChoice("Mapperatorinator v32 (melhor resultado)", "mapperatorinator:v32", false);
 
         foreach (string file in new[] { System.IO.Path.Combine("pulso", "pulso-voz.joblib"), System.IO.Path.Combine("pulso", "pulso.joblib"), System.IO.Path.Combine("pulso", "pulso-style.joblib"), System.IO.Path.Combine("pulso", "pulso-s.pt"), System.IO.Path.Combine("pulso", "pulso-s-sotarks.pt") })
